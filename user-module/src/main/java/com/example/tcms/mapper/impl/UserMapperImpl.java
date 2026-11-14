@@ -24,6 +24,7 @@ public class UserMapperImpl implements UserMapper {
                     .email(user.getEmail())
                     .role(user.getRole())
                     .active(user.isActive())
+                    .createdAt(user.getCreatedAt()
                     .build();
     }
 
