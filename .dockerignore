@@ -1,0 +1,8 @@
+**/target/
+.git/
+.idea/
+**/.idea/
+document/
+LEARNING_LOG.md
+.env
+*.env
