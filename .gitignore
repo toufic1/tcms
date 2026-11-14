@@ -38,6 +38,7 @@ build/
 
 ### Personal files (not part of the code) ###
 document/
+LEARNING_LOG.md
 
 ### Secrets - never commit these ###
 .env
