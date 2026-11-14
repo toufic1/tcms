@@ -34,6 +34,13 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<!-- Actuator: ready-made monitoring endpoints such as /actuator/health.
+		     Docker and Jenkins will call /actuator/health to check that a deploy worked. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.testcase</groupId>
 			<artifactId>lib-model</artifactId>
