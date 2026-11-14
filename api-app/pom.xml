@@ -1,0 +1,71 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.testcase</groupId>
+		<artifactId>testcase-system</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>api-app</artifactId>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.testcase</groupId>
+			<artifactId>lib-model</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.testcase</groupId>
+			<artifactId>lib-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.testcase</groupId>
+			<artifactId>user-module</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.testcase</groupId>
+			<artifactId>testcase-module</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.testcase</groupId>
+			<artifactId>testrun-module</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.testcase</groupId>
+			<artifactId>project-module</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

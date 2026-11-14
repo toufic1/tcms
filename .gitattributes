@@ -1,0 +1,13 @@
+# Store all text files in the repo with Linux line endings (LF).
+# Our code is built by Jenkins and runs on Ubuntu, where Windows line endings (CRLF)
+# break shell scripts like ./mvnw ("bad interpreter: /bin/sh^M").
+* text=auto eol=lf
+
+# Windows-only scripts keep Windows line endings.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary files: never touch them.
+*.jar binary
+*.docx binary
+*.png binary
