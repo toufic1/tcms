@@ -2,31 +2,47 @@ package com.example.tcms.testrun;
 
 import com.example.tcms.common.Common;
 import com.example.tcms.enums.TestRunStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "test_runs")
+@Getter
+@Setter
+@NoArgsConstructor
 public class TestRun extends Common {
-    String name;
 
-    String projectId;
+    @Column(nullable = false)
+    private String name;
 
-    String testSuiteId;
+    private String projectId;
 
-    String executedBy;
+    private String testSuiteId;
 
-    TestRunStatus status;
+    private String executedBy;
 
-    int totalTests;
+    @Enumerated(EnumType.STRING)
+    private TestRunStatus status;
 
-    int passedTests;
+    private int totalTests;
 
-    int failedTests;
+    private int passedTests;
 
-    int blockedTests;
+    private int failedTests;
 
-    int skippedTests;
+    private int blockedTests;
 
-    LocalDateTime startedAt;
+    private int skippedTests;
 
-    LocalDateTime completedAt;
+    private LocalDateTime startedAt;
+
+    private LocalDateTime completedAt;
 }

@@ -13,12 +13,14 @@ import com.example.tcms.repository.UserRepository;
 import com.example.tcms.service.ProjectServ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class ProjectServImpl implements ProjectServ {
     private static final Logger log = LoggerFactory.getLogger(ProjectServImpl.class);
     private ProjectRepository repository;

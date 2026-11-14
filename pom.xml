@@ -1,25 +1,128 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Parent POM for TCMS.
+  It does not contain code itself (packaging = pom). It:
+    1. lists the modules to build, in one command from this folder (mvn clean verify)
+    2. fixes the versions of Spring Boot and of our own modules in ONE place
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <groupId>org.example</groupId>
-  <artifactId>tcms</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<modelVersion>4.0.0</modelVersion>
 
-  <name>tcms</name>
-  <url>http://maven.apache.org</url>
+	<groupId>com.testcase</groupId>
+	<artifactId>testcase-system</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<java.version>17</java.version>
+		<spring.boot.version>4.0.1</spring.boot.version>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<!-- Build order is worked out by Maven from the dependencies, not from this list -->
+	<modules>
+		<module>lib-model</module>
+		<module>lib-core</module>
+		<module>user-module</module>
+		<module>project-module</module>
+		<module>test-case-module</module>
+		<module>test-run-module</module>
+		<module>api-app</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- Spring Boot BOM: picks compatible versions for every Spring/Hibernate/PostgreSQL library -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Internal modules -->
+			<dependency>
+				<groupId>com.testcase</groupId>
+				<artifactId>lib-model</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testcase</groupId>
+				<artifactId>lib-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testcase</groupId>
+				<artifactId>user-module</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testcase</groupId>
+				<artifactId>project-module</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testcase</groupId>
+				<artifactId>testcase-module</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testcase</groupId>
+				<artifactId>testrun-module</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.13.0</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+					</configuration>
+				</plugin>
+
+				<!--
+				  Turns api-app's jar into a runnable "fat jar" that contains all dependencies,
+				  so it can be started with: java -jar api-app-1.0.0.jar
+				  (Without the repackage goal the jar only held our own 3 classes and could not run.)
+				-->
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
 </project>

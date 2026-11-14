@@ -5,8 +5,9 @@ import com.example.tcms.dto.request.UpdateProjectRequest;
 import com.example.tcms.dto.response.ProjectResponse;
 import com.example.tcms.mapper.ProjectMapper;
 import com.example.tcms.project.Project;
-import com.example.tcms.user.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProjectMapperImpl implements ProjectMapper {
     @Override
     public Project toEntity(CreateProjectRequest request) {

@@ -2,23 +2,47 @@ package com.example.tcms.testrun;
 
 import com.example.tcms.common.Common;
 import com.example.tcms.enums.ResultStatus;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "test_results")
+@Getter
+@Setter
+@NoArgsConstructor
 public class TestResult extends Common {
-    String testRunId;
 
-    String testCaseId;
+    private String testRunId;
 
-    ResultStatus result;
+    private String testCaseId;
 
-    String actualResult;
+    @Enumerated(EnumType.STRING)
+    private ResultStatus result;
 
-    String comments;
+    @Column(length = 4000)
+    private String actualResult;
 
-    String executedBy;
+    @Column(length = 4000)
+    private String comments;
 
-    long executionTimeInSeconds;
+    private String executedBy;
 
-    List<String> attachments;
+    private long executionTimeInSeconds;
+
+    @ElementCollection
+    @CollectionTable(name = "test_result_attachments", joinColumns = @JoinColumn(name = "test_result_id"))
+    @Column(name = "attachment")
+    private List<String> attachments = new ArrayList<>();
 }

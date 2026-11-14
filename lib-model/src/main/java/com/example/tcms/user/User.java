@@ -2,37 +2,50 @@ package com.example.tcms.user;
 
 import com.example.tcms.common.Common;
 import com.example.tcms.enums.Role;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+@Entity
+// "user" is a reserved word in PostgreSQL, so the table is called "users"
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
-@Document(collection = "users")
 public class User extends Common {
-    String username;
 
-    String firstName;
+    // unique = the database itself refuses duplicates, even if a service check is forgotten
+    @Column(nullable = false, unique = true)
+    private String username;
 
-    String lastName;
+    private String firstName;
 
-    String email;
+    private String lastName;
 
-    String password;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    Role role;
+    @Column(nullable = false)
+    private String password;
 
-    boolean active;
-    boolean isDeleted;
+    // Store "ADMIN", not 0. With ORDINAL, adding/reordering enum values would corrupt existing rows.
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    String profileImage;
-    LocalDateTime lastLogin;
+    private boolean active;
+
+    private boolean isDeleted;
+
+    private String profileImage;
+
+    private LocalDateTime lastLogin;
 
     public User(String username, String firstName, String lastName, String email, String password, Role role, boolean active) {
         this.username = username;
@@ -45,4 +58,3 @@ public class User extends Common {
         this.lastLogin = LocalDateTime.now();
     }
 }
-
