@@ -8,6 +8,7 @@ pipeline {
 
     environment {
         COMPOSE_PROJECT_NAME = 'tcms'                  // same containers + volume as step F
+        DB_PASSWORD = credentials('tcms-db-password')  // from Jenkins, never from Git
     }
 
     stages {
