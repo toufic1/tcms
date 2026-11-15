@@ -1,32 +1,82 @@
+# docker-compose.yaml: describes our 2 containers and how they work together.
+# One command starts everything:  docker compose up -d
+#
+#   [app]  ──(network: "db:5432")──►  [db]  ──►  volume "pgdata" (the real data)
+#     ▲
+#   port 8080 open to the outside
+#
+# Compose creates a private network for these services. On that network,
+# each container can reach the other one by its SERVICE NAME ("db", "app").
+
 services:
+
+  # ---------- The database: PostgreSQL ----------
   db:
+    # Official PostgreSQL image from Docker Hub. We don't build it, we just download it.
     image: postgres:latest
+
+    # If the container crashes or the VPS reboots, Docker starts it again by itself.
+    # "unless-stopped" = except if we stopped it on purpose.
     restart: unless-stopped
+
+    # The postgres image reads these variables on its FIRST start
+    # and creates the database "tcms" with the user "tcms".
     environment:
       POSTGRES_DB: tcms
       POSTGRES_USER: tcms
+      # The password is NOT written here (this file is in Git).
+      # It comes from the environment: the .env file locally, Jenkins credentials on the VPS.
+      # ":?" = if DB_PASSWORD is missing, stop with this error instead of starting with no password.
       POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is not set}
+
+    # The database files are stored in the named volume "pgdata", outside the container.
+    # Why: a container can be deleted and recreated on every deploy;
+    #      the volume (our data) stays.
     volumes:
       - pgdata:/var/lib/postgresql
+
+    # How Docker checks that PostgreSQL is really ready to accept connections
+    # (a running container is not the same as a ready database).
+    # pg_isready is asked every 5s, up to 10 times.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U tcms -d tcms"]
       interval: 5s
       timeout: 3s
       retries: 10
 
+    # Note: NO "ports:" here, on purpose.
+    # The database is reachable only by the app, on the private network.
+    # Published ports bypass the ufw firewall, so a published DB port would be open to the internet.
+
+  # ---------- The Spring Boot app ----------
   app:
+    # Build the image from the Dockerfile in this folder (".").
     build: .
+    # Name the built image tcms-app:latest.
     image: tcms-app:latest
+
+    # Same as db: restart automatically after a crash or a reboot.
     restart: unless-stopped
+
+    # Start the app only AFTER the db healthcheck says it is healthy.
+    # Why: if the app starts first, it can't connect to the database and crashes.
     depends_on:
       db:
         condition: service_healthy
+
+    # Config the app reads at startup (application.properties uses DB_URL, DB_USERNAME, DB_PASSWORD).
+    # "db" in the URL is the service name above: Compose's network turns it into the db container's IP.
     environment:
       DB_URL: jdbc:postgresql://db:5432/tcms
       DB_USERNAME: tcms
       DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is not set}
+
+    # "host port : container port". Opens port 8080 of the VPS and sends it to 8080 in the container.
+    # This is the only door from the outside into our system.
     ports:
       - "8080:8080"
 
+# Declare the named volume used above. Docker creates it once and keeps it
+# (on the VPS it's called tcms_pgdata: project name + volume name).
 volumes:
   pgdata:
