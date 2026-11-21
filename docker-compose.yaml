@@ -13,7 +13,7 @@ services:
   # ---------- The database: PostgreSQL ----------
   db:
     # Official PostgreSQL image from Docker Hub. We don't build it, we just download it.
-    image: postgres:latest
+    image: postgres:18
 
     # If the container crashes or the VPS reboots, Docker starts it again by itself.
     # "unless-stopped" = except if we stopped it on purpose.
