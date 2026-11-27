@@ -6,6 +6,7 @@ import com.example.tcms.dto.UpdateUserRequest;
 import com.example.tcms.dto.UserResponse;
 import com.example.tcms.response.ApiResponse;
 import com.example.tcms.service.impl.UserServiceImplementation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class UserController {
     UserServiceImplementation userServiceImplementation;
 
     @PostMapping
-    public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity createUser(@Valid @RequestBody CreateUserRequest request) {
         UserResponse response = userServiceImplementation.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity updateUser(@PathVariable("id") String id, @Valid@RequestBody UpdateUserRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(userServiceImplementation.update(id, request)));
     }
 

@@ -35,10 +35,10 @@ public class ProjectServImpl implements ProjectServ {
 
     @Override
     public ProjectResponse create(CreateProjectRequest request,String userId) {
-        if(repository.existsByName(request.getName())){
+        if(repository.existsByName(request.name())){
             throw new DuplicateException("Project exists");
         }
-        List<String> memberIds=request.getMemberIds();
+        List<String> memberIds=request.memberIds();
         for(String id:memberIds){
             if(!userRepository.findByIdAndIsDeletedFalse(id).isPresent()){
                 throw new NotFoundException("User not found "+id);
