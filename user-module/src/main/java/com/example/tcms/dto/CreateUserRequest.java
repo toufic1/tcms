@@ -1,10 +1,7 @@
 package com.example.tcms.dto;
 
 import com.example.tcms.enums.Role;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +12,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserRequest {
-    @NotBlank@NotEmpty
+    @NotBlank
+    @Size(max = 255)
     String username;
-    @NotBlank@NotEmpty
+    @NotBlank
+    @Size(max = 255)
     String firstName;
-
+    @Size(max = 255)
     String lastName;
-    @Email@NotBlank
+    @Email
+    @NotBlank
+    @Size(max = 255)
     String email;
-    @NotBlank@Size(min = 3,max = 12,message = "Password should be between 3 and 12")
+    @NotBlank
+    @Size(min = 3, max = 12, message = "Password should be between 3 and 12")
     String password;
-    @NotBlank@NotEmpty
+    @NotNull
     Role role;
 }

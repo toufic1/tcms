@@ -4,6 +4,7 @@ import com.example.tcms.dto.request.CreateProjectRequest;
 import com.example.tcms.dto.request.UpdateProjectRequest;
 import com.example.tcms.response.ApiResponse;
 import com.example.tcms.service.impl.ProjectServImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class ProjectController {
     private ProjectServImpl serv;
 
     @PostMapping
-    public ResponseEntity<?> createProject(@RequestBody CreateProjectRequest createProjectRequest,@RequestHeader("X-USER-ID") String userId) {
+    public ResponseEntity<?> createProject(@Valid  @RequestBody CreateProjectRequest createProjectRequest, @RequestHeader("X-USER-ID") String userId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(serv.create(createProjectRequest,userId),
                 "Project Created Successfully"));
     }
@@ -34,7 +35,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable("id") String id, @RequestBody UpdateProjectRequest request) {
+    public ResponseEntity<?> updateProject(@PathVariable("id") String id, @Valid @RequestBody UpdateProjectRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(serv.update(id,request),"Updated Successfully"));
     }

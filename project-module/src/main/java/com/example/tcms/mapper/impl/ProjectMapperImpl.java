@@ -14,9 +14,9 @@ public class ProjectMapperImpl implements ProjectMapper {
 
         Project project = new Project();
 
-        project.setName(request.getName());
-        project.setDescription(request.getDescription());
-        project.setMemberIds(request.getMemberIds());
+        project.setName(request.name());
+        project.setDescription(request.description());
+        project.setMemberIds(request.memberIds());
         project.setArchived(false);
         project.setVersion("v1.0");
 
