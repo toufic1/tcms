@@ -7,6 +7,8 @@ import com.example.tcms.mapper.ProjectMapper;
 import com.example.tcms.project.Project;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class ProjectMapperImpl implements ProjectMapper {
     @Override
@@ -16,7 +18,7 @@ public class ProjectMapperImpl implements ProjectMapper {
 
         project.setName(request.name());
         project.setDescription(request.description());
-        project.setMemberIds(request.memberIds());
+        project.setMemberIds(request.memberIds() == null ? new ArrayList<>() : new ArrayList<>(request.memberIds()));
         project.setArchived(false);
         project.setVersion("v1.0");
 
@@ -52,6 +54,5 @@ public class ProjectMapperImpl implements ProjectMapper {
             project.setMemberIds(request.getMemberIds());
         }
 
-        project.setArchived(request.isArchived());
     }
 }
