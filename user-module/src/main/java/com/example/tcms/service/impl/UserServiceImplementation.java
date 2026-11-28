@@ -11,6 +11,9 @@ import com.example.tcms.service.UserService;
 import com.example.tcms.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,13 +54,14 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponse getById(String id) {
         Optional<User> user = userRepository.findByIdAndIsDeletedFalse(id);
         if (!user.isPresent()) {
             log.info("User not found with id: {}", id);
             throw new NotFoundException("User is not found");
         }
-        log.info("User found: {}", user);
+        log.info("User loaded from the database: {}", id);
         return userMapper.toResponse(user.get());
     }
 
@@ -72,6 +76,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    @CachePut(value = "users", key = "#id")
     public UserResponse update(String id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -97,6 +102,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "users",key = "#id")
     public void delete(String id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
