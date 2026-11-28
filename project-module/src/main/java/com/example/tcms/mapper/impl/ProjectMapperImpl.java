@@ -54,6 +54,5 @@ public class ProjectMapperImpl implements ProjectMapper {
             project.setMemberIds(request.getMemberIds());
         }
 
-        project.setArchived(request.isArchived());
     }
 }

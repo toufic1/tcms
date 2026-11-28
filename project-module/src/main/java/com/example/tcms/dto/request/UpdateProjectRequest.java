@@ -13,8 +13,5 @@ public class UpdateProjectRequest {
     @Size(max = 255)
     String description;
 
-
-    boolean archived;
-
     List<String> memberIds;
 }
