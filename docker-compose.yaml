@@ -63,6 +63,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+
 
     # Config the app reads at startup (application.properties uses DB_URL, DB_USERNAME, DB_PASSWORD).
     # "db" in the URL is the service name above: Compose's network turns it into the db container's IP.
@@ -70,11 +73,26 @@ services:
       DB_URL: jdbc:postgresql://db:5432/tcms
       DB_USERNAME: tcms
       DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is not set}
-
+      REDIS_HOST: redis
     # "host port : container port". Opens port 8080 of the VPS and sends it to 8080 in the container.
     # This is the only door from the outside into our system.
     ports:
       - "8080:8080"
+
+    # ---------- The cache: Redis ----------
+  redis:
+      # Official Redis image, pinned to 8.2 (alpine = small Linux base).
+      image: redis:8.2-alpine
+      restart: unless-stopped
+      # Redis is ready when "redis-cli ping" answers PONG.
+      healthcheck:
+        test: [ "CMD", "redis-cli", "ping" ]
+        interval: 5s
+        timeout: 3s
+        retries: 10
+      # No "ports:" and no volume, on purpose:
+      # only the app talks to Redis, and a cache can be lost without losing data.
+
 
 # Declare the named volume used above. Docker creates it once and keeps it
 # (on the VPS it's called tcms_pgdata: project name + volume name).

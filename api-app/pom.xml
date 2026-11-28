@@ -41,6 +41,18 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+		<!-- Redis: the client that talks to the Redis server (Lettuce) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<!-- Spring Cache: @Cacheable / @CacheEvict, stored in Redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.testcase</groupId>
 			<artifactId>lib-model</artifactId>
