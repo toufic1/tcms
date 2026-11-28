@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,12 +52,9 @@ public class ProjectServImpl implements ProjectServ {
 
     @Override
     public ProjectResponse getById(String id) {
-        Optional<Project> project = repository.findByIdAndArchivedFalse(id);
-        if (!project.isPresent()) {
-            log.info("Project Not Found {}", id);
-            throw new NotFoundException("Project Not Found");
-        }
-        return projectMapper.toResponse(project.get());
+        Project project = repository.findByIdAndArchivedFalse(id)
+                .orElseThrow(()-> new NotFoundException("Project Not Found"));
+        return projectMapper.toResponse(project);
     }
 
     @Override
@@ -69,30 +65,26 @@ public class ProjectServImpl implements ProjectServ {
 
     @Override
     public ProjectResponse update(String id, UpdateProjectRequest request) {
-        Optional<Project> project = repository.findByIdAndArchivedFalse(id);
-        if (!project.isPresent()) {
-            throw new NotFoundException("Project not found");
-        }
+        Project project = repository.findByIdAndArchivedFalse(id)
+                .orElseThrow(()-> new NotFoundException("Project Not Found"));
         List<String> memberIds = request.getMemberIds();
         checkMemberExist(memberIds);
-        Project pr = project.get();
-        projectMapper.update(request, pr);
-        repository.save(pr);
-        return projectMapper.toResponse(pr);
+        projectMapper.update(request, project);
+        repository.save(project);
+        return projectMapper.toResponse(project);
     }
 
     @Override
     public void archive(String id) {
-        Optional<Project> project = repository.findByIdAndArchivedFalse(id);
-        if (!project.isPresent()) {
-            log.info("Project not found {}", id);
-            throw new NotFoundException("Project not found");
-        }
-        if (project.get().isArchived()) {
+        Project project = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Project not found")
+                );
+        if (project.isArchived()) {
             throw new ProjectAlreadyArchivedException("Project Already archived");
         }
-        project.get().setArchived(true);
-        repository.save(project.get());
+        project.setArchived(true);
+        repository.save(project);
+
     }
 
     private void checkMemberExist(List<String> memberIds) {

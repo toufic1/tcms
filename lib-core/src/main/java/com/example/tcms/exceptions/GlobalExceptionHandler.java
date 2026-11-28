@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectAlreadyArchivedException.class)
     public ResponseEntity<ApiResponse<Void>> projectArchived(ProjectAlreadyArchivedException ex) {
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
+                .status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
